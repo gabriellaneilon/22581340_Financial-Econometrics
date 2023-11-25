@@ -1,0 +1,277 @@
+---
+output:
+  md_document:
+    variant: markdown_github
+---
+Question 1
+Loading data and packages
+```{r}
+library(tidyverse)
+
+if (!require("rmsfuns")) install.packages("rmsfuns")
+library(rmsfuns)
+library(tidyverse)
+pacman::p_load(tbl2xts)
+library(truncdist)
+library(rportfolios)
+
+library(rmsfuns)
+load_pkg("PerformanceAnalytics")
+pacman::p_load("tbl2xts")
+pacman::p_load("xts", "tidyverse", "tbl2xts", "PerformanceAnalytics", 
+    "lubridate", "glue")
+
+ASISA <- read_rds("/Users/gabriellaneilon/Library/Mobile Documents/com~apple~CloudDocs/Masters/Data_23/ASISA_Rets.rds") 
+BM <- read_rds("/Users/gabriellaneilon/Library/Mobile Documents/com~apple~CloudDocs/Masters/Data_23/Capped_SWIX.rds")
+AI_Fund <- read_rds("/Users/gabriellaneilon/Library/Mobile Documents/com~apple~CloudDocs/Masters/Data_23/AI_Max_Fund.rds")
+```
+
+Data wrangling
+The Asisa is on daily returns (have to make it monthly first) alsoIf you're comparing your fund's performance with industry peers (ASISA active managers), and you're specifically asked to showcase your fund's performance in relation to these peers, you should filter out or exclude the data for those peers labeled "Yes" under the "Industry" column in the ASISA dataset. This filtering would focus your analysis on comparing your fund's performance against other active managers within the industry, excluding those that are not relevant for this specific comparison.
+
+However, if your primary focus is to compare your fund's performance against other actively managed funds excluding those that operate as Fund of Funds, then excluding the funds labeled "Yes" under the "Fund of Funds" column might be appropriate. This would allow for a more direct comparison with similar fund structures or investment strategies to better assess your fund's performance within that context.
+
+```{r}
+library(zoo)
+ASISA_monthly <- ASISA %>% 
+   filter(`FoF` != "Yes" & Index != "Yes") %>%  #filter out to only focus on actively managed funds
+# Make xts:
+tbl_xts(., cols_to_xts = Returns, spread_by = Fund) %>% 
+na.locf(., na.rm = F, maxgap = 5) %>% 
+xts::apply.monthly(., FUN = PerformanceAnalytics::mean.geometric) %>% 
+    
+# Make tibble again:
+xts_tbl() %>% 
+gather(Fund, Returns, -date) %>% mutate(date = as.Date(date)) 
+
+#making the other datsets time series before combining for time series analysis
+
+AI_fund_final <- AI_Fund %>% 
+ mutate(date = as.Date(date))
+
+BM_final <- BM %>% 
+    tbl_xts(., cols_to_xts = Returns, spread_by = Tickers) %>% 
+    # Make tibble again:
+xts_tbl()  %>% mutate(date = as.Date(date))
+
+
+#taking into account the tyranny of fees for actively managed funds working with a 2% annual management fee for active funds
+#I also chose to avergae the industry funds to make comparison easier
+
+ASISA_final <- 
+  ASISA_monthly %>% filter(date >ymd(20030131)) %>% 
+    mutate(Net_Returns = Returns - ((1+200*1e-4)^(1/12)-1)) %>% 
+     rename(Gross = Returns) %>% group_by(date) %>% summarise(Industry=mean(Net_Returns, na.rm = T))
+
+df1 <- merge(ASISA_final, AI_fund_final, by="date", all=T)
+
+finaldat <- merge(df1, BM_final, by="date", all=T)
+
+tidydat <- finaldat %>% gather("Funds", "Returns", -date)
+```
+
+
+```{r}
+library("RcppRoll")
+library(fmxdat)
+
+plottidydat <- 
+tidydat %>% group_by(Funds) %>% 
+# Epic sorcery:
+mutate(RollRets = RcppRoll::roll_prod(1 + Returns, 36, fill = NA, 
+    align = "right")^(12/36) - 1) %>% 
+group_by(date) %>% filter(any(!is.na(RollRets))) %>% 
+ungroup()
+
+g <- 
+plottidydat %>% 
+ggplot() + 
+geom_line(aes(date, RollRets, color = Funds), alpha = 0.7, 
+    size = 1.25) + 
+labs(title = "Rolling 3 Year Annualized Returns of various Indices with differing start dates", 
+    subtitle = "", x = "", y = "Rolling 3 year Returns (Ann.)", 
+    caption = "Note:\nDistortions are not evident now.") + theme_fmx(title.size = ggpts(30), 
+    subtitle.size = ggpts(5), caption.size = ggpts(25), CustomCaption = T) + 
+    
+fmx_cols()
+
+g_finplot <- finplot(g, x.date.dist = "1 year", x.date.type = "%Y", x.vert = T, 
+    y.pct = T, y.pct_acc = 1)
+
+```
+We can see that the AI fund travks the benchmark much better than the comparitive actively managed industry funds
+
+Rolling Betas (comparing volatility)
+
+```{r}
+# Rolling Betas:
+
+
+PerformanceAnalytics::chart.RollingRegression(Ra = tidydat %>% filter(Funds %in% c("Industry","AI_Fund")) %>% 
+                                                mutate(Returns = coalesce(Returns, 0) ) %>% 
+                                                tbl_xts(., cols_to_xts = Returns, spread_by = Funds),
+                                              Rb = tidydat %>% filter(Funds %in% "J433") %>% group_by(date) %>% summarise(BM = max(Returns)) %>%
+                                                tbl_xts(., cols_to_xts = BM),width=36,attribute = c("Beta"), legend.loc = "top")
+
+
+#beta against the industry
+
+PerformanceAnalytics::chart.RollingRegression(Ra = tidydat %>% filter(Funds %in% "AI_Fund") %>% 
+                                                mutate(Returns = coalesce(Returns, 0) ) %>% 
+                                                tbl_xts(., cols_to_xts = Returns, spread_by = Funds),
+                                              Rb = tidydat %>% filter(Funds %in% "Industry") %>% group_by(date) %>% summarise(Industry = max(Returns)) %>%
+                                                tbl_xts(., cols_to_xts = Industry),width=36,attribute = c("Beta"), legend.loc = "top")
+
+
+```
+Beta is a statistical measure of the volatility of a stock versus the overall market.
+A beta above 1 means a stock is more volatile than the overall market.
+A beta below 1 means a stock is less volatile than the overall market.
+Rolling Beta Changes: If the rolling beta of a fund against the industry varies significantly over time, it suggests changes in the fund's sensitivity to the industry.
+Higher Rolling Beta (>1): Indicates that the fund's returns are more volatile than the industry index during that period. It might imply the fund tends to magnify the movements in the industry index.
+Lower Rolling Beta (<1): Indicates that the fund's returns are less volatile than the industry index during that period. It might suggest the fund is more stable compared to the industry.
+
+
+
+```{r}
+#but the problem is that I cannot compare apples with apples yet, because there are multiple active funds to which I can compare the AI fund to, which would not give a clear picture, so instead I want to startify the returns for the Industry funds
+
+library(rmsfuns)
+pacman::p_load("tidyr", "tbl2xts","devtools","lubridate", "readr", "PerformanceAnalytics", "ggplot2", "dplyr")
+
+
+Idxs <- 
+  
+  ASISA_monthly %>% arrange(date) %>% 
+  
+  select(date, Fund, Returns) %>% filter(!is.na(Returns)) %>% 
+  
+  mutate(YearMonth = format(date, "%Y%B"))
+
+# Consider only indexes with data from before 20080101, and use this as a common start date too...:
+# Can you argue why?
+
+Idx_Cons <- 
+  
+  Idxs %>% group_by(Fund) %>% filter(date == first(date)) %>% 
+  
+  ungroup() %>% filter(date < ymd(20080101)) %>% 
+  
+  pull(Fund) %>% unique
+
+Idxs <- 
+  
+  Idxs %>% 
+  
+  filter(Fund %in% Idx_Cons) %>% 
+  
+  filter(date > ymd(20080101))
+
+# Winzorising:
+
+Idxs <-
+  
+  Idxs %>% group_by(Fund) %>% 
+  
+  mutate(Top = quantile(Returns, 0.99), Bot = quantile(Returns, 0.01)) %>% 
+  
+  mutate(Returns = ifelse(Returns > Top, Top, 
+                         
+                         ifelse(Returns < Bot, Bot, Returns))) %>% ungroup()
+
+
+
+
+```
+
+
+
+Question 2
+
+```{r}
+pacman::p_load("tidyverse", "devtools", "FactoMineR", "factoextra", "broom", "rmsfuns")
+
+Indexes <- read_rds("/Users/gabriellaneilon/Library/Mobile Documents/com~apple~CloudDocs/Masters/Data_23/Cncy_Hedge_Assets.rds") 
+ZAR <- read_rds("/Users/gabriellaneilon/Library/Mobile Documents/com~apple~CloudDocs/Masters/Data_23/Monthly_zar.rds")
+
+
+ZAR <- ZAR%>% 
+    tbl_xts(., cols_to_xts = value, spread_by = Tickers) %>% 
+xts_tbl()  %>% mutate(date = as.Date(date))
+
+#fill in values of indexes -Better solution - as it preserves the distributional elements particular to the stock.
+Indexes_long <- Indexes %>% gather("Index", "Returns", -date)
+Index_ZAR <- merge(Indexes, ZAR, by="date", all=T)
+source("code/Impute_NA_Returns.R") 
+
+
+complete_data <- impute_missing_returns(Index_ZAR, impute_returns_method = "Drawn_Distribution_Own")
+
+dates <- dateconverter(as.Date("2002-02-28"), as.Date("2023-08-31"), 
+    "calendarEOM")
+
+Data <- complete_data %>% filter(date %in% dates)
+```
+
+Get the sample covariance and geometric means
+
+Assigning weights
+Solve a simple portfolio optimization problem The portfolio problem is to form a minimum variance portfolio subject to full investment and long only constraints. The objective is to minimize portfolio variance. There are two constraints in this problem: the full investment constraint means that the weights must sum to 1, and the long only constraint means that all weights must be greater than or equal to 0 (i.e. no short positions are allowed).
+```{r}
+library(rportfolios)
+#rebalancing quarterly
+RebMonths <- c(3,6,9,12) # Make a parameter that can easily be changed later.
+
+RandomWeights <- 
+  
+Data %>% 
+  
+    mutate(Months = as.numeric(format(date, format = "%m")), 
+           
+           YearMonths = as.numeric(format(date, format = "%Y%m"))) %>% 
+  
+  filter(Months %in% RebMonths) 
+
+# Now let's create a column with the random weights assigned to each stock conforming to the following parameters:
+# Let's also create a random weighting vector for our selected stocks, with the following parameters:
+# They have to sum to 1...
+# Let's add constraints too - you can only have a maximum exposure to a single stock up to 20% of the equal weight.
+N_Stocks <- length(unique(RandomWeights$Stocks))
+
+Max_Exposure <-(1/N_Stocks)*1.20
+
+# Minimum exposure is, say, 2%:
+Min_Exposure <- 0.02
+
+# Now to append the weight vector, let's use the random.bounded function from rportfolios.
+
+RandomWeights_adj <-  
+  bind_cols(RandomWeights %>% arrange(Date),
+            RandomWeights %>% group_by(Date) %>% 
+              
+  do( Randweights = random.bounded(n = nrow(.), 
+                 x.t = 1, # Full investment... 
+                 x.l = rep( Min_Exposure, nrow(.)), # Lower Bound 
+                 x.u = rep( Max_Exposure, nrow(.)), 
+                 max.iter = 1000) ) %>% ungroup() %>% unnest(Randweights) %>% select(-Date)
+  )
+
+# Sanity check: Create a stop function if it doesn't hold...
+if( RandomWeights_adj %>% group_by(Date) %>% 
+    
+    summarise(Fully_Invested = sum(Randweights)) %>% filter(Fully_Invested > 1.000001 | Fully_Invested < 0.9999999 ) %>% nrow() > 0 ) stop("\n=============\n Ooops! \nWeights do not sum to 1... Please check!\n===========\n")
+
+# Create equal weight portfolios as well:
+RandomWeights_adj <- 
+  
+RandomWeights_adj %>% 
+  
+  group_by(Date) %>% 
+  
+  mutate(EqualWeights = 1/n()) %>% 
+  
+  ungroup() %>% select(-Months, -YearMonths)
+
+
+```
+

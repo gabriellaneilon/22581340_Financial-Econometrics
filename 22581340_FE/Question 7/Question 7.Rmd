@@ -6,7 +6,7 @@
 title: "Helping You Write Academic Papers in R using Texevier"
 #subtitle: "This will appear as Right Header"
 
-documentclass: "elsarticle/."
+documentclass: "elsarticle"
 
 # --------- Thesis title (Optional - set to FALSE by default).
 # You can move the details below around as you please.

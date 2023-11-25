@@ -1,0 +1,44 @@
+---
+title: "Performance of Fund"
+subtitle: "TBC"
+author: "Gabriella Neilon"
+institute: "Stellenbosch University"
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+fontsize: 10pt
+output: 
+  beamer_presentation:
+    theme: "CambridgeUS"
+    colortheme: "dolphin"
+    fonttheme: "serif"
+    slide_level: 2
+    fig_width: 5
+    fig_height: 3
+header-includes:
+   - \usepackage{palatino}
+   - \useoutertheme{infolines}
+   - \setbeamertemplate{navigation symbols}{}
+   - \setbeamertemplate{caption}[numbered]
+   - \setbeamercolor{block title}{bg=blue!30,fg=black}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Introduction
+
+///
+
+## Annualised Rolling Returns
+
+![](Figures/g_finplot.png)
+
+We can see that the AI fund travks the benchmark much better than the comparitive actively managed industry funds
+
+## Rolling Betas (benchmark)
+
+![](Figures/rolling_bm.png)
+
+## Rolling Betas (industry)
+
+![](Figures/rolling_industry.png)
