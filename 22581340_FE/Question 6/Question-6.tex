@@ -1,0 +1,825 @@
+\documentclass[11pt,preprint, authoryear]{elsarticle}
+
+\usepackage{lmodern}
+%%%% My spacing
+\usepackage{setspace}
+\setstretch{1.2}
+\DeclareMathSizes{12}{14}{10}{10}
+
+% Wrap around which gives all figures included the [H] command, or places it "here". This can be tedious to code in Rmarkdown.
+\usepackage{float}
+\let\origfigure\figure
+\let\endorigfigure\endfigure
+\renewenvironment{figure}[1][2] {
+    \expandafter\origfigure\expandafter[H]
+} {
+    \endorigfigure
+}
+
+\let\origtable\table
+\let\endorigtable\endtable
+\renewenvironment{table}[1][2] {
+    \expandafter\origtable\expandafter[H]
+} {
+    \endorigtable
+}
+
+
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+    \usepackage{xltxtra,xunicode}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
+  \newcommand{\euro}{€}
+\fi
+
+\usepackage{amssymb, amsmath, amsthm, amsfonts}
+
+\def\bibsection{\section*{References}} %%% Make "References" appear before bibliography
+
+
+\usepackage[round]{natbib}
+
+\usepackage{longtable}
+\usepackage[margin=2.3cm,bottom=2cm,top=2.5cm, includefoot]{geometry}
+\usepackage{fancyhdr}
+\usepackage[bottom, hang, flushmargin]{footmisc}
+\usepackage{graphicx}
+\numberwithin{equation}{section}
+\numberwithin{figure}{section}
+\numberwithin{table}{section}
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{1.3ex plus 0.5ex minus 0.3ex}
+\usepackage{textcomp}
+\renewcommand{\headrulewidth}{0.2pt}
+\renewcommand{\footrulewidth}{0.3pt}
+
+\usepackage{array}
+\newcolumntype{x}[1]{>{\centering\arraybackslash\hspace{0pt}}p{#1}}
+
+%%%%  Remove the "preprint submitted to" part. Don't worry about this either, it just looks better without it:
+\makeatletter
+\def\ps@pprintTitle{%
+  \let\@oddhead\@empty
+  \let\@evenhead\@empty
+  \let\@oddfoot\@empty
+  \let\@evenfoot\@oddfoot
+}
+\makeatother
+
+ \def\tightlist{} % This allows for subbullets!
+
+\usepackage{hyperref}
+\hypersetup{breaklinks=true,
+            bookmarks=true,
+            colorlinks=true,
+            citecolor=blue,
+            urlcolor=blue,
+            linkcolor=blue,
+            pdfborder={0 0 0}}
+
+
+% The following packages allow huxtable to work:
+\usepackage{siunitx}
+\usepackage{multirow}
+\usepackage{hhline}
+\usepackage{calc}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{caption}
+
+
+\newenvironment{columns}[1][]{}{}
+
+\newenvironment{column}[1]{\begin{minipage}{#1}\ignorespaces}{%
+\end{minipage}
+\ifhmode\unskip\fi
+\aftergroup\useignorespacesandallpars}
+
+\def\useignorespacesandallpars#1\ignorespaces\fi{%
+#1\fi\ignorespacesandallpars}
+
+\makeatletter
+\def\ignorespacesandallpars{%
+  \@ifnextchar\par
+    {\expandafter\ignorespacesandallpars\@gobble}%
+    {}%
+}
+\makeatother
+
+\newenvironment{CSLReferences}[2]{%
+}
+
+\urlstyle{same}  % don't use monospace font for urls
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\setcounter{secnumdepth}{5}
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+
+%%% Include extra packages specified by user
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{longtable}
+\usepackage{colortbl}
+\usepackage{array}
+
+%%% Hard setting column skips for reports - this ensures greater consistency and control over the length settings in the document.
+%% page layout
+%% paragraphs
+\setlength{\baselineskip}{12pt plus 0pt minus 0pt}
+\setlength{\parskip}{12pt plus 0pt minus 0pt}
+\setlength{\parindent}{0pt plus 0pt minus 0pt}
+%% floats
+\setlength{\floatsep}{12pt plus 0 pt minus 0pt}
+\setlength{\textfloatsep}{20pt plus 0pt minus 0pt}
+\setlength{\intextsep}{14pt plus 0pt minus 0pt}
+\setlength{\dbltextfloatsep}{20pt plus 0pt minus 0pt}
+\setlength{\dblfloatsep}{14pt plus 0pt minus 0pt}
+%% maths
+\setlength{\abovedisplayskip}{12pt plus 0pt minus 0pt}
+\setlength{\belowdisplayskip}{12pt plus 0pt minus 0pt}
+%% lists
+\setlength{\topsep}{10pt plus 0pt minus 0pt}
+\setlength{\partopsep}{3pt plus 0pt minus 0pt}
+\setlength{\itemsep}{5pt plus 0pt minus 0pt}
+\setlength{\labelsep}{8mm plus 0mm minus 0mm}
+\setlength{\parsep}{\the\parskip}
+\setlength{\listparindent}{\the\parindent}
+%% verbatim
+\setlength{\fboxsep}{5pt plus 0pt minus 0pt}
+
+
+
+\begin{document}
+
+
+
+\begin{frontmatter}  %
+
+\title{Question 6: Portfolio Construction}
+
+% Set to FALSE if wanting to remove title (for submission)
+
+
+
+
+\author[Add1]{Gabriella Neilon}
+\ead{22581340@sun.ac.za}
+
+
+
+
+
+\address[Add1]{Stellenbosch University}
+
+\cortext[cor]{Corresponding author: Gabriella Neilon}
+
+\begin{abstract}
+\small{
+The portfolio construction adheres to a structured framework
+encompassing a long-only strategy and employs covariance and mean
+forecasts derived from a look-back period not exceeding 3 years. Assets
+lacking a minimum of 3 years' returns data are excluded from
+consideration. The portfolio is subject to quarterly rebalancing to
+maintain alignment with predefined exposure thresholds, including a 25\%
+limit on Bonds and credit instruments, a maximum of 60\% exposure to
+Equities, and a cap of 40\% on single asset exposure. Utilizing monthly
+data, a covariance matrix has been estimated using datasets available
+post-2010 for analytical purposes.
+}
+\end{abstract}
+
+\vspace{1cm}
+
+
+
+
+
+\vspace{0.5cm}
+
+\end{frontmatter}
+
+\setcounter{footnote}{0}
+
+
+
+%________________________
+% Header and Footers
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagestyle{fancy}
+\chead{}
+\rhead{}
+\lfoot{}
+\rfoot{\footnotesize Page \thepage}
+\lhead{}
+%\rfoot{\footnotesize Page \thepage } % "e.g. Page 2"
+\cfoot{}
+
+%\setlength\headheight{30pt}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%________________________
+
+\headsep 35pt % So that header does not go over title
+
+
+
+
+The table showcases a Simple Covariance Matrix applied with linear
+constraints for portfolio weight allocation. Due to time constraints, I
+couldn't implement these optimized weights to construct the portfolio
+returns. Ideally, I intended to compare the performance of this
+idealized portfolio against the benchmark returns.
+
+\begin{longtable}{lrrrr}
+\caption*{
+{\large Correlation with Exchange Rate}
+} \\ 
+\toprule
+Tickers & mv & minvol & erc & riskeff \\ 
+\midrule\addlinespace[2.5pt]
+Asia\_dollar\_Idx & 0.07692308 & 0.25000000 & 0.13024451 & 0.07692308 \\ 
+Bbg\_EUCorpCred\_Unhedged\_USD & 0.07692308 & 0.09895195 & 0.12605474 & 0.07692308 \\ 
+Bbg\_EuroBonds\_UnhedgedEUR & 0.07692308 & 0.01000000 & 0.10454889 & 0.07692308 \\ 
+Bbg\_GlBonds\_HedgedUSD & 0.07692308 & 0.25000000 & 0.17007816 & 0.07692308 \\ 
+Bbg\_GlCorpCred\_Hedged\_USD & 0.07692308 & 0.01000000 & 0.09237409 & 0.07692308 \\ 
+Bbg\_USBonds\_UnhedgedUSD & 0.07692308 & 0.13685281 & 0.13985367 & 0.07692308 \\ 
+Bbg\_USCorpCred\_Unhedged\_USD & 0.07692308 & 0.01000000 & 0.07223162 & 0.07692308 \\ 
+Commod\_Idx & 0.07692308 & 0.01741990 & 0.04251138 & 0.07692308 \\ 
+Dollar\_Idx & 0.07692308 & 0.17677535 & 0.01000000 & 0.07692308 \\ 
+MSCI\_ACWI & 0.07692308 & 0.01000000 & 0.02931999 & 0.07692308 \\ 
+MSCI\_Jap & 0.07692308 & 0.01000000 & 0.02853624 & 0.07692308 \\ 
+MSCI\_RE & 0.07692308 & 0.01000000 & 0.02389699 & 0.07692308 \\ 
+MSCI\_USA & 0.07692308 & 0.01000000 & 0.03034972 & 0.07692308 \\ 
+Asia\_dollar\_Idx & 0.07692308 & 0.25000000 & 0.13024451 & 0.07692308 \\ 
+Bbg\_EUCorpCred\_Unhedged\_USD & 0.07692308 & 0.09895195 & 0.12605474 & 0.07692308 \\ 
+Bbg\_EuroBonds\_UnhedgedEUR & 0.07692308 & 0.01000000 & 0.10454889 & 0.07692308 \\ 
+Bbg\_GlBonds\_HedgedUSD & 0.07692308 & 0.25000000 & 0.17007816 & 0.07692308 \\ 
+Bbg\_GlCorpCred\_Hedged\_USD & 0.07692308 & 0.01000000 & 0.09237409 & 0.07692308 \\ 
+Bbg\_USBonds\_UnhedgedUSD & 0.07692308 & 0.13685281 & 0.13985367 & 0.07692308 \\ 
+Bbg\_USCorpCred\_Unhedged\_USD & 0.07692308 & 0.01000000 & 0.07223162 & 0.07692308 \\ 
+Commod\_Idx & 0.07692308 & 0.01741990 & 0.04251138 & 0.07692308 \\ 
+Dollar\_Idx & 0.07692308 & 0.17677535 & 0.01000000 & 0.07692308 \\ 
+MSCI\_ACWI & 0.07692308 & 0.01000000 & 0.02931999 & 0.07692308 \\ 
+MSCI\_Jap & 0.07692308 & 0.01000000 & 0.02853624 & 0.07692308 \\ 
+MSCI\_RE & 0.07692308 & 0.01000000 & 0.02389699 & 0.07692308 \\ 
+MSCI\_USA & 0.07692308 & 0.01000000 & 0.03034972 & 0.07692308 \\ 
+Asia\_dollar\_Idx & 0.07692308 & 0.25000000 & 0.13024451 & 0.07692308 \\ 
+Bbg\_EUCorpCred\_Unhedged\_USD & 0.07692308 & 0.09895195 & 0.12605474 & 0.07692308 \\ 
+Bbg\_EuroBonds\_UnhedgedEUR & 0.07692308 & 0.01000000 & 0.10454889 & 0.07692308 \\ 
+Bbg\_GlBonds\_HedgedUSD & 0.07692308 & 0.25000000 & 0.17007816 & 0.07692308 \\ 
+Bbg\_GlCorpCred\_Hedged\_USD & 0.07692308 & 0.01000000 & 0.09237409 & 0.07692308 \\ 
+Bbg\_USBonds\_UnhedgedUSD & 0.07692308 & 0.13685281 & 0.13985367 & 0.07692308 \\ 
+Bbg\_USCorpCred\_Unhedged\_USD & 0.07692308 & 0.01000000 & 0.07223162 & 0.07692308 \\ 
+Commod\_Idx & 0.07692308 & 0.01741990 & 0.04251138 & 0.07692308 \\ 
+Dollar\_Idx & 0.07692308 & 0.17677535 & 0.01000000 & 0.07692308 \\ 
+MSCI\_ACWI & 0.07692308 & 0.01000000 & 0.02931999 & 0.07692308 \\ 
+MSCI\_Jap & 0.07692308 & 0.01000000 & 0.02853624 & 0.07692308 \\ 
+MSCI\_RE & 0.07692308 & 0.01000000 & 0.02389699 & 0.07692308 \\ 
+MSCI\_USA & 0.07692308 & 0.01000000 & 0.03034972 & 0.07692308 \\ 
+Asia\_dollar\_Idx & 0.07692308 & 0.25000000 & 0.13024451 & 0.07692308 \\ 
+Bbg\_EUCorpCred\_Unhedged\_USD & 0.07692308 & 0.09895195 & 0.12605474 & 0.07692308 \\ 
+Bbg\_EuroBonds\_UnhedgedEUR & 0.07692308 & 0.01000000 & 0.10454889 & 0.07692308 \\ 
+Bbg\_GlBonds\_HedgedUSD & 0.07692308 & 0.25000000 & 0.17007816 & 0.07692308 \\ 
+Bbg\_GlCorpCred\_Hedged\_USD & 0.07692308 & 0.01000000 & 0.09237409 & 0.07692308 \\ 
+Bbg\_USBonds\_UnhedgedUSD & 0.07692308 & 0.13685281 & 0.13985367 & 0.07692308 \\ 
+Bbg\_USCorpCred\_Unhedged\_USD & 0.07692308 & 0.01000000 & 0.07223162 & 0.07692308 \\ 
+Commod\_Idx & 0.07692308 & 0.01741990 & 0.04251138 & 0.07692308 \\ 
+Dollar\_Idx & 0.07692308 & 0.17677535 & 0.01000000 & 0.07692308 \\ 
+MSCI\_ACWI & 0.07692308 & 0.01000000 & 0.02931999 & 0.07692308 \\ 
+MSCI\_Jap & 0.07692308 & 0.01000000 & 0.02853624 & 0.07692308 \\ 
+MSCI\_RE & 0.07692308 & 0.01000000 & 0.02389699 & 0.07692308 \\ 
+MSCI\_USA & 0.07692308 & 0.01000000 & 0.03034972 & 0.07692308 \\ 
+Asia\_dollar\_Idx & 0.07692308 & 0.25000000 & 0.13024451 & 0.07692308 \\ 
+Bbg\_EUCorpCred\_Unhedged\_USD & 0.07692308 & 0.09895195 & 0.12605474 & 0.07692308 \\ 
+Bbg\_EuroBonds\_UnhedgedEUR & 0.07692308 & 0.01000000 & 0.10454889 & 0.07692308 \\ 
+Bbg\_GlBonds\_HedgedUSD & 0.07692308 & 0.25000000 & 0.17007816 & 0.07692308 \\ 
+Bbg\_GlCorpCred\_Hedged\_USD & 0.07692308 & 0.01000000 & 0.09237409 & 0.07692308 \\ 
+Bbg\_USBonds\_UnhedgedUSD & 0.07692308 & 0.13685281 & 0.13985367 & 0.07692308 \\ 
+Bbg\_USCorpCred\_Unhedged\_USD & 0.07692308 & 0.01000000 & 0.07223162 & 0.07692308 \\ 
+Commod\_Idx & 0.07692308 & 0.01741990 & 0.04251138 & 0.07692308 \\ 
+Dollar\_Idx & 0.07692308 & 0.17677535 & 0.01000000 & 0.07692308 \\ 
+MSCI\_ACWI & 0.07692308 & 0.01000000 & 0.02931999 & 0.07692308 \\ 
+MSCI\_Jap & 0.07692308 & 0.01000000 & 0.02853624 & 0.07692308 \\ 
+MSCI\_RE & 0.07692308 & 0.01000000 & 0.02389699 & 0.07692308 \\ 
+MSCI\_USA & 0.07692308 & 0.01000000 & 0.03034972 & 0.07692308 \\ 
+Asia\_dollar\_Idx & 0.07692308 & 0.25000000 & 0.13024451 & 0.07692308 \\ 
+Bbg\_EUCorpCred\_Unhedged\_USD & 0.07692308 & 0.09895195 & 0.12605474 & 0.07692308 \\ 
+Bbg\_EuroBonds\_UnhedgedEUR & 0.07692308 & 0.01000000 & 0.10454889 & 0.07692308 \\ 
+Bbg\_GlBonds\_HedgedUSD & 0.07692308 & 0.25000000 & 0.17007816 & 0.07692308 \\ 
+Bbg\_GlCorpCred\_Hedged\_USD & 0.07692308 & 0.01000000 & 0.09237409 & 0.07692308 \\ 
+Bbg\_USBonds\_UnhedgedUSD & 0.07692308 & 0.13685281 & 0.13985367 & 0.07692308 \\ 
+Bbg\_USCorpCred\_Unhedged\_USD & 0.07692308 & 0.01000000 & 0.07223162 & 0.07692308 \\ 
+Commod\_Idx & 0.07692308 & 0.01741990 & 0.04251138 & 0.07692308 \\ 
+Dollar\_Idx & 0.07692308 & 0.17677535 & 0.01000000 & 0.07692308 \\ 
+MSCI\_ACWI & 0.07692308 & 0.01000000 & 0.02931999 & 0.07692308 \\ 
+MSCI\_Jap & 0.07692308 & 0.01000000 & 0.02853624 & 0.07692308 \\ 
+MSCI\_RE & 0.07692308 & 0.01000000 & 0.02389699 & 0.07692308 \\ 
+MSCI\_USA & 0.07692308 & 0.01000000 & 0.03034972 & 0.07692308 \\ 
+Asia\_dollar\_Idx & 0.07692308 & 0.25000000 & 0.13024451 & 0.07692308 \\ 
+Bbg\_EUCorpCred\_Unhedged\_USD & 0.07692308 & 0.09895195 & 0.12605474 & 0.07692308 \\ 
+Bbg\_EuroBonds\_UnhedgedEUR & 0.07692308 & 0.01000000 & 0.10454889 & 0.07692308 \\ 
+Bbg\_GlBonds\_HedgedUSD & 0.07692308 & 0.25000000 & 0.17007816 & 0.07692308 \\ 
+Bbg\_GlCorpCred\_Hedged\_USD & 0.07692308 & 0.01000000 & 0.09237409 & 0.07692308 \\ 
+Bbg\_USBonds\_UnhedgedUSD & 0.07692308 & 0.13685281 & 0.13985367 & 0.07692308 \\ 
+Bbg\_USCorpCred\_Unhedged\_USD & 0.07692308 & 0.01000000 & 0.07223162 & 0.07692308 \\ 
+Commod\_Idx & 0.07692308 & 0.01741990 & 0.04251138 & 0.07692308 \\ 
+Dollar\_Idx & 0.07692308 & 0.17677535 & 0.01000000 & 0.07692308 \\ 
+MSCI\_ACWI & 0.07692308 & 0.01000000 & 0.02931999 & 0.07692308 \\ 
+MSCI\_Jap & 0.07692308 & 0.01000000 & 0.02853624 & 0.07692308 \\ 
+MSCI\_RE & 0.07692308 & 0.01000000 & 0.02389699 & 0.07692308 \\ 
+MSCI\_USA & 0.07692308 & 0.01000000 & 0.03034972 & 0.07692308 \\ 
+Asia\_dollar\_Idx & 0.07692308 & 0.25000000 & 0.13024451 & 0.07692308 \\ 
+Bbg\_EUCorpCred\_Unhedged\_USD & 0.07692308 & 0.09895195 & 0.12605474 & 0.07692308 \\ 
+Bbg\_EuroBonds\_UnhedgedEUR & 0.07692308 & 0.01000000 & 0.10454889 & 0.07692308 \\ 
+Bbg\_GlBonds\_HedgedUSD & 0.07692308 & 0.25000000 & 0.17007816 & 0.07692308 \\ 
+Bbg\_GlCorpCred\_Hedged\_USD & 0.07692308 & 0.01000000 & 0.09237409 & 0.07692308 \\ 
+Bbg\_USBonds\_UnhedgedUSD & 0.07692308 & 0.13685281 & 0.13985367 & 0.07692308 \\ 
+Bbg\_USCorpCred\_Unhedged\_USD & 0.07692308 & 0.01000000 & 0.07223162 & 0.07692308 \\ 
+Commod\_Idx & 0.07692308 & 0.01741990 & 0.04251138 & 0.07692308 \\ 
+Dollar\_Idx & 0.07692308 & 0.17677535 & 0.01000000 & 0.07692308 \\ 
+MSCI\_ACWI & 0.07692308 & 0.01000000 & 0.02931999 & 0.07692308 \\ 
+MSCI\_Jap & 0.07692308 & 0.01000000 & 0.02853624 & 0.07692308 \\ 
+MSCI\_RE & 0.07692308 & 0.01000000 & 0.02389699 & 0.07692308 \\ 
+MSCI\_USA & 0.07692308 & 0.01000000 & 0.03034972 & 0.07692308 \\ 
+Asia\_dollar\_Idx & 0.07692308 & 0.25000000 & 0.13024451 & 0.07692308 \\ 
+Bbg\_EUCorpCred\_Unhedged\_USD & 0.07692308 & 0.09895195 & 0.12605474 & 0.07692308 \\ 
+Bbg\_EuroBonds\_UnhedgedEUR & 0.07692308 & 0.01000000 & 0.10454889 & 0.07692308 \\ 
+Bbg\_GlBonds\_HedgedUSD & 0.07692308 & 0.25000000 & 0.17007816 & 0.07692308 \\ 
+Bbg\_GlCorpCred\_Hedged\_USD & 0.07692308 & 0.01000000 & 0.09237409 & 0.07692308 \\ 
+Bbg\_USBonds\_UnhedgedUSD & 0.07692308 & 0.13685281 & 0.13985367 & 0.07692308 \\ 
+Bbg\_USCorpCred\_Unhedged\_USD & 0.07692308 & 0.01000000 & 0.07223162 & 0.07692308 \\ 
+Commod\_Idx & 0.07692308 & 0.01741990 & 0.04251138 & 0.07692308 \\ 
+Dollar\_Idx & 0.07692308 & 0.17677535 & 0.01000000 & 0.07692308 \\ 
+MSCI\_ACWI & 0.07692308 & 0.01000000 & 0.02931999 & 0.07692308 \\ 
+MSCI\_Jap & 0.07692308 & 0.01000000 & 0.02853624 & 0.07692308 \\ 
+MSCI\_RE & 0.07692308 & 0.01000000 & 0.02389699 & 0.07692308 \\ 
+MSCI\_USA & 0.07692308 & 0.01000000 & 0.03034972 & 0.07692308 \\ 
+Asia\_dollar\_Idx & 0.07692308 & 0.25000000 & 0.13024451 & 0.07692308 \\ 
+Bbg\_EUCorpCred\_Unhedged\_USD & 0.07692308 & 0.09895195 & 0.12605474 & 0.07692308 \\ 
+Bbg\_EuroBonds\_UnhedgedEUR & 0.07692308 & 0.01000000 & 0.10454889 & 0.07692308 \\ 
+Bbg\_GlBonds\_HedgedUSD & 0.07692308 & 0.25000000 & 0.17007816 & 0.07692308 \\ 
+Bbg\_GlCorpCred\_Hedged\_USD & 0.07692308 & 0.01000000 & 0.09237409 & 0.07692308 \\ 
+Bbg\_USBonds\_UnhedgedUSD & 0.07692308 & 0.13685281 & 0.13985367 & 0.07692308 \\ 
+Bbg\_USCorpCred\_Unhedged\_USD & 0.07692308 & 0.01000000 & 0.07223162 & 0.07692308 \\ 
+Commod\_Idx & 0.07692308 & 0.01741990 & 0.04251138 & 0.07692308 \\ 
+Dollar\_Idx & 0.07692308 & 0.17677535 & 0.01000000 & 0.07692308 \\ 
+MSCI\_ACWI & 0.07692308 & 0.01000000 & 0.02931999 & 0.07692308 \\ 
+MSCI\_Jap & 0.07692308 & 0.01000000 & 0.02853624 & 0.07692308 \\ 
+MSCI\_RE & 0.07692308 & 0.01000000 & 0.02389699 & 0.07692308 \\ 
+MSCI\_USA & 0.07692308 & 0.01000000 & 0.03034972 & 0.07692308 \\ 
+Asia\_dollar\_Idx & 0.07692308 & 0.25000000 & 0.13024451 & 0.07692308 \\ 
+Bbg\_EUCorpCred\_Unhedged\_USD & 0.07692308 & 0.09895195 & 0.12605474 & 0.07692308 \\ 
+Bbg\_EuroBonds\_UnhedgedEUR & 0.07692308 & 0.01000000 & 0.10454889 & 0.07692308 \\ 
+Bbg\_GlBonds\_HedgedUSD & 0.07692308 & 0.25000000 & 0.17007816 & 0.07692308 \\ 
+Bbg\_GlCorpCred\_Hedged\_USD & 0.07692308 & 0.01000000 & 0.09237409 & 0.07692308 \\ 
+Bbg\_USBonds\_UnhedgedUSD & 0.07692308 & 0.13685281 & 0.13985367 & 0.07692308 \\ 
+Bbg\_USCorpCred\_Unhedged\_USD & 0.07692308 & 0.01000000 & 0.07223162 & 0.07692308 \\ 
+Commod\_Idx & 0.07692308 & 0.01741990 & 0.04251138 & 0.07692308 \\ 
+Dollar\_Idx & 0.07692308 & 0.17677535 & 0.01000000 & 0.07692308 \\ 
+MSCI\_ACWI & 0.07692308 & 0.01000000 & 0.02931999 & 0.07692308 \\ 
+MSCI\_Jap & 0.07692308 & 0.01000000 & 0.02853624 & 0.07692308 \\ 
+MSCI\_RE & 0.07692308 & 0.01000000 & 0.02389699 & 0.07692308 \\ 
+MSCI\_USA & 0.07692308 & 0.01000000 & 0.03034972 & 0.07692308 \\ 
+Asia\_dollar\_Idx & 0.07692308 & 0.25000000 & 0.13024451 & 0.07692308 \\ 
+Bbg\_EUCorpCred\_Unhedged\_USD & 0.07692308 & 0.09895195 & 0.12605474 & 0.07692308 \\ 
+Bbg\_EuroBonds\_UnhedgedEUR & 0.07692308 & 0.01000000 & 0.10454889 & 0.07692308 \\ 
+Bbg\_GlBonds\_HedgedUSD & 0.07692308 & 0.25000000 & 0.17007816 & 0.07692308 \\ 
+Bbg\_GlCorpCred\_Hedged\_USD & 0.07692308 & 0.01000000 & 0.09237409 & 0.07692308 \\ 
+Bbg\_USBonds\_UnhedgedUSD & 0.07692308 & 0.13685281 & 0.13985367 & 0.07692308 \\ 
+Bbg\_USCorpCred\_Unhedged\_USD & 0.07692308 & 0.01000000 & 0.07223162 & 0.07692308 \\ 
+Commod\_Idx & 0.07692308 & 0.01741990 & 0.04251138 & 0.07692308 \\ 
+Dollar\_Idx & 0.07692308 & 0.17677535 & 0.01000000 & 0.07692308 \\ 
+MSCI\_ACWI & 0.07692308 & 0.01000000 & 0.02931999 & 0.07692308 \\ 
+MSCI\_Jap & 0.07692308 & 0.01000000 & 0.02853624 & 0.07692308 \\ 
+MSCI\_RE & 0.07692308 & 0.01000000 & 0.02389699 & 0.07692308 \\ 
+MSCI\_USA & 0.07692308 & 0.01000000 & 0.03034972 & 0.07692308 \\ 
+Asia\_dollar\_Idx & 0.07692308 & 0.25000000 & 0.13018129 & 0.07692308 \\ 
+Bbg\_EUCorpCred\_Unhedged\_USD & 0.07692308 & 0.09664046 & 0.12550626 & 0.07692308 \\ 
+Bbg\_EuroBonds\_UnhedgedEUR & 0.07692308 & 0.01000000 & 0.10393248 & 0.07692308 \\ 
+Bbg\_GlBonds\_HedgedUSD & 0.07692308 & 0.25000000 & 0.16958916 & 0.07692308 \\ 
+Bbg\_GlCorpCred\_Hedged\_USD & 0.07692308 & 0.01000000 & 0.09218877 & 0.07692308 \\ 
+Bbg\_USBonds\_UnhedgedUSD & 0.07692308 & 0.13796361 & 0.14092431 & 0.07692308 \\ 
+Bbg\_USCorpCred\_Unhedged\_USD & 0.07692308 & 0.01000000 & 0.07229310 & 0.07692308 \\ 
+Commod\_Idx & 0.07692308 & 0.01754134 & 0.04271704 & 0.07692308 \\ 
+Dollar\_Idx & 0.07692308 & 0.17785458 & 0.01000000 & 0.07692308 \\ 
+MSCI\_ACWI & 0.07692308 & 0.01000000 & 0.02931152 & 0.07692308 \\ 
+MSCI\_Jap & 0.07692308 & 0.01000000 & 0.02934088 & 0.07692308 \\ 
+MSCI\_RE & 0.07692308 & 0.01000000 & 0.02392647 & 0.07692308 \\ 
+MSCI\_USA & 0.07692308 & 0.01000000 & 0.03008872 & 0.07692308 \\ 
+Asia\_dollar\_Idx & 0.07692308 & 0.25000000 & 0.13042759 & 0.07692308 \\ 
+Bbg\_EUCorpCred\_Unhedged\_USD & 0.07692308 & 0.09316072 & 0.12527482 & 0.07692308 \\ 
+Bbg\_EuroBonds\_UnhedgedEUR & 0.07692308 & 0.01000000 & 0.10359585 & 0.07692308 \\ 
+Bbg\_GlBonds\_HedgedUSD & 0.07692308 & 0.25000000 & 0.16936120 & 0.07692308 \\ 
+Bbg\_GlCorpCred\_Hedged\_USD & 0.07692308 & 0.01000000 & 0.09194663 & 0.07692308 \\ 
+Bbg\_USBonds\_UnhedgedUSD & 0.07692308 & 0.13875249 & 0.14104229 & 0.07692308 \\ 
+Bbg\_USCorpCred\_Unhedged\_USD & 0.07692308 & 0.01000000 & 0.07211603 & 0.07692308 \\ 
+Commod\_Idx & 0.07692308 & 0.01699899 & 0.04332610 & 0.07692308 \\ 
+Dollar\_Idx & 0.07692308 & 0.18108780 & 0.01000000 & 0.07692308 \\ 
+MSCI\_ACWI & 0.07692308 & 0.01000000 & 0.02935096 & 0.07692308 \\ 
+MSCI\_Jap & 0.07692308 & 0.01000000 & 0.02958107 & 0.07692308 \\ 
+MSCI\_RE & 0.07692308 & 0.01000000 & 0.02394817 & 0.07692308 \\ 
+MSCI\_USA & 0.07692308 & 0.01000000 & 0.03002928 & 0.07692308 \\ 
+Asia\_dollar\_Idx & 0.07692308 & 0.25000000 & 0.13219776 & 0.07692308 \\ 
+Bbg\_EUCorpCred\_Unhedged\_USD & 0.07692308 & 0.08995457 & 0.12563515 & 0.07692308 \\ 
+Bbg\_EuroBonds\_UnhedgedEUR & 0.07692308 & 0.01000000 & 0.10200023 & 0.07692308 \\ 
+Bbg\_GlBonds\_HedgedUSD & 0.07692308 & 0.25000000 & 0.16661255 & 0.07692308 \\ 
+Bbg\_GlCorpCred\_Hedged\_USD & 0.07692308 & 0.01000000 & 0.09193137 & 0.07692308 \\ 
+Bbg\_USBonds\_UnhedgedUSD & 0.07692308 & 0.14009190 & 0.14090445 & 0.07692308 \\ 
+Bbg\_USCorpCred\_Unhedged\_USD & 0.07692308 & 0.01000000 & 0.07212412 & 0.07692308 \\ 
+Commod\_Idx & 0.07692308 & 0.01737911 & 0.04423643 & 0.07692308 \\ 
+Dollar\_Idx & 0.07692308 & 0.18257442 & 0.01000000 & 0.07692308 \\ 
+MSCI\_ACWI & 0.07692308 & 0.01000000 & 0.02984653 & 0.07692308 \\ 
+MSCI\_Jap & 0.07692308 & 0.01000000 & 0.02992945 & 0.07692308 \\ 
+MSCI\_RE & 0.07692308 & 0.01000000 & 0.02433992 & 0.07692308 \\ 
+MSCI\_USA & 0.07692308 & 0.01000000 & 0.03024203 & 0.07692308 \\ 
+Asia\_dollar\_Idx & 0.07692308 & 0.25000000 & 0.13460482 & 0.07692308 \\ 
+Bbg\_EUCorpCred\_Unhedged\_USD & 0.07692308 & 0.08623910 & 0.12545631 & 0.07692308 \\ 
+Bbg\_EuroBonds\_UnhedgedEUR & 0.07692308 & 0.01000000 & 0.10342427 & 0.07692308 \\ 
+Bbg\_GlBonds\_HedgedUSD & 0.07692308 & 0.25000000 & 0.16488213 & 0.07692308 \\ 
+Bbg\_GlCorpCred\_Hedged\_USD & 0.07692308 & 0.01000000 & 0.09133662 & 0.07692308 \\ 
+Bbg\_USBonds\_UnhedgedUSD & 0.07692308 & 0.14298226 & 0.13828888 & 0.07692308 \\ 
+Bbg\_USCorpCred\_Unhedged\_USD & 0.07692308 & 0.01000000 & 0.07154649 & 0.07692308 \\ 
+Commod\_Idx & 0.07692308 & 0.01624742 & 0.04476684 & 0.07692308 \\ 
+Dollar\_Idx & 0.07692308 & 0.18453122 & 0.01000000 & 0.07692308 \\ 
+MSCI\_ACWI & 0.07692308 & 0.01000000 & 0.03042100 & 0.07692308 \\ 
+MSCI\_Jap & 0.07692308 & 0.01000000 & 0.03001792 & 0.07692308 \\ 
+MSCI\_RE & 0.07692308 & 0.01000000 & 0.02469315 & 0.07692308 \\ 
+MSCI\_USA & 0.07692308 & 0.01000000 & 0.03056158 & 0.07692308 \\ 
+Asia\_dollar\_Idx & 0.07692308 & 0.25000000 & 0.13528066 & 0.07692308 \\ 
+Bbg\_EUCorpCred\_Unhedged\_USD & 0.07692308 & 0.08202807 & 0.12562656 & 0.07692308 \\ 
+Bbg\_EuroBonds\_UnhedgedEUR & 0.07692308 & 0.01000000 & 0.10364815 & 0.07692308 \\ 
+Bbg\_GlBonds\_HedgedUSD & 0.07692308 & 0.25000000 & 0.16451028 & 0.07692308 \\ 
+Bbg\_GlCorpCred\_Hedged\_USD & 0.07692308 & 0.01000000 & 0.09119479 & 0.07692308 \\ 
+Bbg\_USBonds\_UnhedgedUSD & 0.07692308 & 0.14545698 & 0.13808628 & 0.07692308 \\ 
+Bbg\_USCorpCred\_Unhedged\_USD & 0.07692308 & 0.01000000 & 0.07142744 & 0.07692308 \\ 
+Commod\_Idx & 0.07692308 & 0.01592576 & 0.04498207 & 0.07692308 \\ 
+Dollar\_Idx & 0.07692308 & 0.18658919 & 0.01000000 & 0.07692308 \\ 
+MSCI\_ACWI & 0.07692308 & 0.01000000 & 0.03039756 & 0.07692308 \\ 
+MSCI\_Jap & 0.07692308 & 0.01000000 & 0.02992417 & 0.07692308 \\ 
+MSCI\_RE & 0.07692308 & 0.01000000 & 0.02461264 & 0.07692308 \\ 
+MSCI\_USA & 0.07692308 & 0.01000000 & 0.03030939 & 0.07692308 \\ 
+Asia\_dollar\_Idx & 0.07692308 & 0.25000000 & 0.13619080 & 0.07692308 \\ 
+Bbg\_EUCorpCred\_Unhedged\_USD & 0.07692308 & 0.08349612 & 0.12500334 & 0.07692308 \\ 
+Bbg\_EuroBonds\_UnhedgedEUR & 0.07692308 & 0.01000000 & 0.10492051 & 0.07692308 \\ 
+Bbg\_GlBonds\_HedgedUSD & 0.07692308 & 0.25000000 & 0.16384289 & 0.07692308 \\ 
+Bbg\_GlCorpCred\_Hedged\_USD & 0.07692308 & 0.01000000 & 0.09069379 & 0.07692308 \\ 
+Bbg\_USBonds\_UnhedgedUSD & 0.07692308 & 0.14404104 & 0.13702662 & 0.07692308 \\ 
+Bbg\_USCorpCred\_Unhedged\_USD & 0.07692308 & 0.01000000 & 0.07102362 & 0.07692308 \\ 
+Commod\_Idx & 0.07692308 & 0.01546050 & 0.04548535 & 0.07692308 \\ 
+Dollar\_Idx & 0.07692308 & 0.18700234 & 0.01000000 & 0.07692308 \\ 
+MSCI\_ACWI & 0.07692308 & 0.01000000 & 0.03060607 & 0.07692308 \\ 
+MSCI\_Jap & 0.07692308 & 0.01000000 & 0.03017363 & 0.07692308 \\ 
+MSCI\_RE & 0.07692308 & 0.01000000 & 0.02467726 & 0.07692308 \\ 
+MSCI\_USA & 0.07692308 & 0.01000000 & 0.03035612 & 0.07692308 \\ 
+Asia\_dollar\_Idx & 0.07692308 & 0.25000000 & 0.13624246 & 0.07692308 \\ 
+Bbg\_EUCorpCred\_Unhedged\_USD & 0.07692308 & 0.08477688 & 0.12526572 & 0.07692308 \\ 
+Bbg\_EuroBonds\_UnhedgedEUR & 0.07692308 & 0.01000000 & 0.10596387 & 0.07692308 \\ 
+Bbg\_GlBonds\_HedgedUSD & 0.07692308 & 0.25000000 & 0.16343540 & 0.07692308 \\ 
+Bbg\_GlCorpCred\_Hedged\_USD & 0.07692308 & 0.01000000 & 0.09045352 & 0.07692308 \\ 
+Bbg\_USBonds\_UnhedgedUSD & 0.07692308 & 0.14255961 & 0.13620445 & 0.07692308 \\ 
+Bbg\_USCorpCred\_Unhedged\_USD & 0.07692308 & 0.01000000 & 0.07076218 & 0.07692308 \\ 
+Commod\_Idx & 0.07692308 & 0.01510740 & 0.04596744 & 0.07692308 \\ 
+Dollar\_Idx & 0.07692308 & 0.18755612 & 0.01000000 & 0.07692308 \\ 
+MSCI\_ACWI & 0.07692308 & 0.01000000 & 0.03061235 & 0.07692308 \\ 
+MSCI\_Jap & 0.07692308 & 0.01000000 & 0.03035320 & 0.07692308 \\ 
+MSCI\_RE & 0.07692308 & 0.01000000 & 0.02453953 & 0.07692308 \\ 
+MSCI\_USA & 0.07692308 & 0.01000000 & 0.03019989 & 0.07692308 \\ 
+Asia\_dollar\_Idx & 0.07692308 & 0.25000000 & 0.13600817 & 0.07692308 \\ 
+Bbg\_EUCorpCred\_Unhedged\_USD & 0.07692308 & 0.08336692 & 0.12517707 & 0.07692308 \\ 
+Bbg\_EuroBonds\_UnhedgedEUR & 0.07692308 & 0.01000000 & 0.10601030 & 0.07692308 \\ 
+Bbg\_GlBonds\_HedgedUSD & 0.07692308 & 0.25000000 & 0.16345691 & 0.07692308 \\ 
+Bbg\_GlCorpCred\_Hedged\_USD & 0.07692308 & 0.01000000 & 0.09040596 & 0.07692308 \\ 
+Bbg\_USBonds\_UnhedgedUSD & 0.07692308 & 0.14347242 & 0.13620546 & 0.07692308 \\ 
+Bbg\_USCorpCred\_Unhedged\_USD & 0.07692308 & 0.01000000 & 0.07074021 & 0.07692308 \\ 
+Commod\_Idx & 0.07692308 & 0.01461731 & 0.04611618 & 0.07692308 \\ 
+Dollar\_Idx & 0.07692308 & 0.18854335 & 0.01000000 & 0.07692308 \\ 
+MSCI\_ACWI & 0.07692308 & 0.01000000 & 0.03065533 & 0.07692308 \\ 
+MSCI\_Jap & 0.07692308 & 0.01000000 & 0.03047166 & 0.07692308 \\ 
+MSCI\_RE & 0.07692308 & 0.01000000 & 0.02450319 & 0.07692308 \\ 
+MSCI\_USA & 0.07692308 & 0.01000000 & 0.03024957 & 0.07692308 \\ 
+Asia\_dollar\_Idx & 0.07692308 & 0.25000000 & 0.13596548 & 0.07692308 \\ 
+Bbg\_EUCorpCred\_Unhedged\_USD & 0.07692308 & 0.08339446 & 0.12537972 & 0.07692308 \\ 
+Bbg\_EuroBonds\_UnhedgedEUR & 0.07692308 & 0.01000000 & 0.10592098 & 0.07692308 \\ 
+Bbg\_GlBonds\_HedgedUSD & 0.07692308 & 0.25000000 & 0.16350603 & 0.07692308 \\ 
+Bbg\_GlCorpCred\_Hedged\_USD & 0.07692308 & 0.01000000 & 0.09030432 & 0.07692308 \\ 
+Bbg\_USBonds\_UnhedgedUSD & 0.07692308 & 0.14265395 & 0.13633859 & 0.07692308 \\ 
+Bbg\_USCorpCred\_Unhedged\_USD & 0.07692308 & 0.01000000 & 0.07061690 & 0.07692308 \\ 
+Commod\_Idx & 0.07692308 & 0.01384568 & 0.04607234 & 0.07692308 \\ 
+Dollar\_Idx & 0.07692308 & 0.19010591 & 0.01000000 & 0.07692308 \\ 
+MSCI\_ACWI & 0.07692308 & 0.01000000 & 0.03055342 & 0.07692308 \\ 
+MSCI\_Jap & 0.07692308 & 0.01000000 & 0.03074696 & 0.07692308 \\ 
+MSCI\_RE & 0.07692308 & 0.01000000 & 0.02446097 & 0.07692308 \\ 
+MSCI\_USA & 0.07692308 & 0.01000000 & 0.03013427 & 0.07692308 \\ 
+Asia\_dollar\_Idx & 0.07692308 & 0.25000000 & 0.13445081 & 0.07692308 \\ 
+Bbg\_EUCorpCred\_Unhedged\_USD & 0.07692308 & 0.09212323 & 0.12636679 & 0.07692308 \\ 
+Bbg\_EuroBonds\_UnhedgedEUR & 0.07692308 & 0.01000000 & 0.10672978 & 0.07692308 \\ 
+Bbg\_GlBonds\_HedgedUSD & 0.07692308 & 0.25000000 & 0.16491344 & 0.07692308 \\ 
+Bbg\_GlCorpCred\_Hedged\_USD & 0.07692308 & 0.01000000 & 0.09010400 & 0.07692308 \\ 
+Bbg\_USBonds\_UnhedgedUSD & 0.07692308 & 0.13545848 & 0.13523417 & 0.07692308 \\ 
+Bbg\_USCorpCred\_Unhedged\_USD & 0.07692308 & 0.01000000 & 0.07018461 & 0.07692308 \\ 
+Commod\_Idx & 0.07692308 & 0.01369250 & 0.04607439 & 0.07692308 \\ 
+Dollar\_Idx & 0.07692308 & 0.18872579 & 0.01000000 & 0.07692308 \\ 
+MSCI\_ACWI & 0.07692308 & 0.01000000 & 0.03051494 & 0.07692308 \\ 
+MSCI\_Jap & 0.07692308 & 0.01000000 & 0.03100816 & 0.07692308 \\ 
+MSCI\_RE & 0.07692308 & 0.01000000 & 0.02460539 & 0.07692308 \\ 
+MSCI\_USA & 0.07692308 & 0.01000000 & 0.02981352 & 0.07692308 \\ 
+Asia\_dollar\_Idx & 0.07692308 & 0.25000000 & 0.13565937 & 0.07692308 \\ 
+Bbg\_EUCorpCred\_Unhedged\_USD & 0.07692308 & 0.09346760 & 0.12580410 & 0.07692308 \\ 
+Bbg\_EuroBonds\_UnhedgedEUR & 0.07692308 & 0.01000000 & 0.10562985 & 0.07692308 \\ 
+Bbg\_GlBonds\_HedgedUSD & 0.07692308 & 0.25000000 & 0.16480791 & 0.07692308 \\ 
+Bbg\_GlCorpCred\_Hedged\_USD & 0.07692308 & 0.01000000 & 0.09017268 & 0.07692308 \\ 
+Bbg\_USBonds\_UnhedgedUSD & 0.07692308 & 0.13578143 & 0.13650478 & 0.07692308 \\ 
+Bbg\_USCorpCred\_Unhedged\_USD & 0.07692308 & 0.01000000 & 0.07045005 & 0.07692308 \\ 
+Commod\_Idx & 0.07692308 & 0.01332100 & 0.04570426 & 0.07692308 \\ 
+Dollar\_Idx & 0.07692308 & 0.18742996 & 0.01000000 & 0.07692308 \\ 
+MSCI\_ACWI & 0.07692308 & 0.01000000 & 0.03023986 & 0.07692308 \\ 
+MSCI\_Jap & 0.07692308 & 0.01000000 & 0.03105743 & 0.07692308 \\ 
+MSCI\_RE & 0.07692308 & 0.01000000 & 0.02458909 & 0.07692308 \\ 
+MSCI\_USA & 0.07692308 & 0.01000000 & 0.02938062 & 0.07692308 \\ 
+Asia\_dollar\_Idx & 0.07692308 & 0.25000000 & 0.13539771 & 0.07692308 \\ 
+Bbg\_EUCorpCred\_Unhedged\_USD & 0.07692308 & 0.09541809 & 0.12567751 & 0.07692308 \\ 
+Bbg\_EuroBonds\_UnhedgedEUR & 0.07692308 & 0.01000000 & 0.10531089 & 0.07692308 \\ 
+Bbg\_GlBonds\_HedgedUSD & 0.07692308 & 0.25000000 & 0.16510829 & 0.07692308 \\ 
+Bbg\_GlCorpCred\_Hedged\_USD & 0.07692308 & 0.01000000 & 0.09025081 & 0.07692308 \\ 
+Bbg\_USBonds\_UnhedgedUSD & 0.07692308 & 0.13521556 & 0.13697280 & 0.07692308 \\ 
+Bbg\_USCorpCred\_Unhedged\_USD & 0.07692308 & 0.01000000 & 0.07060828 & 0.07692308 \\ 
+Commod\_Idx & 0.07692308 & 0.01290046 & 0.04540883 & 0.07692308 \\ 
+Dollar\_Idx & 0.07692308 & 0.18646589 & 0.01000000 & 0.07692308 \\ 
+MSCI\_ACWI & 0.07692308 & 0.01000000 & 0.03022034 & 0.07692308 \\ 
+MSCI\_Jap & 0.07692308 & 0.01000000 & 0.03117801 & 0.07692308 \\ 
+MSCI\_RE & 0.07692308 & 0.01000000 & 0.02457792 & 0.07692308 \\ 
+MSCI\_USA & 0.07692308 & 0.01000000 & 0.02928861 & 0.07692308 \\ 
+Asia\_dollar\_Idx & 0.07692308 & 0.25000000 & 0.13482994 & 0.07692308 \\ 
+Bbg\_EUCorpCred\_Unhedged\_USD & 0.07692308 & 0.09545600 & 0.12580096 & 0.07692308 \\ 
+Bbg\_EuroBonds\_UnhedgedEUR & 0.07692308 & 0.01000000 & 0.10519214 & 0.07692308 \\ 
+Bbg\_GlBonds\_HedgedUSD & 0.07692308 & 0.25000000 & 0.16498643 & 0.07692308 \\ 
+Bbg\_GlCorpCred\_Hedged\_USD & 0.07692308 & 0.01000000 & 0.09022040 & 0.07692308 \\ 
+Bbg\_USBonds\_UnhedgedUSD & 0.07692308 & 0.13450374 & 0.13747814 & 0.07692308 \\ 
+Bbg\_USCorpCred\_Unhedged\_USD & 0.07692308 & 0.01000000 & 0.07058368 & 0.07692308 \\ 
+Commod\_Idx & 0.07692308 & 0.01320457 & 0.04563172 & 0.07692308 \\ 
+Dollar\_Idx & 0.07692308 & 0.18683569 & 0.01000000 & 0.07692308 \\ 
+MSCI\_ACWI & 0.07692308 & 0.01000000 & 0.03008184 & 0.07692308 \\ 
+MSCI\_Jap & 0.07692308 & 0.01000000 & 0.03166230 & 0.07692308 \\ 
+MSCI\_RE & 0.07692308 & 0.01000000 & 0.02451731 & 0.07692308 \\ 
+MSCI\_USA & 0.07692308 & 0.01000000 & 0.02901512 & 0.07692308 \\ 
+Asia\_dollar\_Idx & 0.07692308 & 0.25000000 & 0.13447042 & 0.07692308 \\ 
+Bbg\_EUCorpCred\_Unhedged\_USD & 0.07692308 & 0.09659550 & 0.12597012 & 0.07692308 \\ 
+Bbg\_EuroBonds\_UnhedgedEUR & 0.07692308 & 0.01000000 & 0.10575287 & 0.07692308 \\ 
+Bbg\_GlBonds\_HedgedUSD & 0.07692308 & 0.25000000 & 0.16531051 & 0.07692308 \\ 
+Bbg\_GlCorpCred\_Hedged\_USD & 0.07692308 & 0.01000000 & 0.09013968 & 0.07692308 \\ 
+Bbg\_USBonds\_UnhedgedUSD & 0.07692308 & 0.13403036 & 0.13739447 & 0.07692308 \\ 
+Bbg\_USCorpCred\_Unhedged\_USD & 0.07692308 & 0.01000000 & 0.07051520 & 0.07692308 \\ 
+Commod\_Idx & 0.07692308 & 0.01302516 & 0.04553793 & 0.07692308 \\ 
+Dollar\_Idx & 0.07692308 & 0.18634898 & 0.01000000 & 0.07692308 \\ 
+MSCI\_ACWI & 0.07692308 & 0.01000000 & 0.02992049 & 0.07692308 \\ 
+MSCI\_Jap & 0.07692308 & 0.01000000 & 0.03180481 & 0.07692308 \\ 
+MSCI\_RE & 0.07692308 & 0.01000000 & 0.02439318 & 0.07692308 \\ 
+MSCI\_USA & 0.07692308 & 0.01000000 & 0.02879031 & 0.07692308 \\ 
+Asia\_dollar\_Idx & 0.07692308 & 0.25000000 & 0.13435645 & 0.07692308 \\ 
+Bbg\_EUCorpCred\_Unhedged\_USD & 0.07692308 & 0.09750370 & 0.12591628 & 0.07692308 \\ 
+Bbg\_EuroBonds\_UnhedgedEUR & 0.07692308 & 0.01000000 & 0.10609014 & 0.07692308 \\ 
+Bbg\_GlBonds\_HedgedUSD & 0.07692308 & 0.25000000 & 0.16570992 & 0.07692308 \\ 
+Bbg\_GlCorpCred\_Hedged\_USD & 0.07692308 & 0.01000000 & 0.09005510 & 0.07692308 \\ 
+Bbg\_USBonds\_UnhedgedUSD & 0.07692308 & 0.13324662 & 0.13748276 & 0.07692308 \\ 
+Bbg\_USCorpCred\_Unhedged\_USD & 0.07692308 & 0.01000000 & 0.07047390 & 0.07692308 \\ 
+Commod\_Idx & 0.07692308 & 0.01300259 & 0.04551096 & 0.07692308 \\ 
+Dollar\_Idx & 0.07692308 & 0.18624709 & 0.01000000 & 0.07692308 \\ 
+MSCI\_ACWI & 0.07692308 & 0.01000000 & 0.02977322 & 0.07692308 \\ 
+MSCI\_Jap & 0.07692308 & 0.01000000 & 0.03169204 & 0.07692308 \\ 
+MSCI\_RE & 0.07692308 & 0.01000000 & 0.02428159 & 0.07692308 \\ 
+MSCI\_USA & 0.07692308 & 0.01000000 & 0.02865766 & 0.07692308 \\ 
+Asia\_dollar\_Idx & 0.07692308 & 0.25000000 & 0.13476361 & 0.07692308 \\ 
+Bbg\_EUCorpCred\_Unhedged\_USD & 0.07692308 & 0.09691857 & 0.12577535 & 0.07692308 \\ 
+Bbg\_EuroBonds\_UnhedgedEUR & 0.07692308 & 0.01000000 & 0.10552715 & 0.07692308 \\ 
+Bbg\_GlBonds\_HedgedUSD & 0.07692308 & 0.25000000 & 0.16573784 & 0.07692308 \\ 
+Bbg\_GlCorpCred\_Hedged\_USD & 0.07692308 & 0.01000000 & 0.08999612 & 0.07692308 \\ 
+Bbg\_USBonds\_UnhedgedUSD & 0.07692308 & 0.13314758 & 0.13797312 & 0.07692308 \\ 
+Bbg\_USCorpCred\_Unhedged\_USD & 0.07692308 & 0.01000000 & 0.07045117 & 0.07692308 \\ 
+Commod\_Idx & 0.07692308 & 0.01234616 & 0.04543643 & 0.07692308 \\ 
+Dollar\_Idx & 0.07692308 & 0.18758769 & 0.01000000 & 0.07692308 \\ 
+MSCI\_ACWI & 0.07692308 & 0.01000000 & 0.02955266 & 0.07692308 \\ 
+MSCI\_Jap & 0.07692308 & 0.01000000 & 0.03227302 & 0.07692308 \\ 
+MSCI\_RE & 0.07692308 & 0.01000000 & 0.02413188 & 0.07692308 \\ 
+MSCI\_USA & 0.07692308 & 0.01000000 & 0.02838164 & 0.07692308 \\ 
+Asia\_dollar\_Idx & 0.07692308 & 0.25000000 & 0.13544084 & 0.07692308 \\ 
+Bbg\_EUCorpCred\_Unhedged\_USD & 0.07692308 & 0.08801206 & 0.12457907 & 0.07692308 \\ 
+Bbg\_EuroBonds\_UnhedgedEUR & 0.07692308 & 0.01000000 & 0.10415124 & 0.07692308 \\ 
+Bbg\_GlBonds\_HedgedUSD & 0.07692308 & 0.25000000 & 0.16641868 & 0.07692308 \\ 
+Bbg\_GlCorpCred\_Hedged\_USD & 0.07692308 & 0.01000000 & 0.08985005 & 0.07692308 \\ 
+Bbg\_USBonds\_UnhedgedUSD & 0.07692308 & 0.13936805 & 0.14015731 & 0.07692308 \\ 
+Bbg\_USCorpCred\_Unhedged\_USD & 0.07692308 & 0.01000000 & 0.07053416 & 0.07692308 \\ 
+Commod\_Idx & 0.07692308 & 0.01105641 & 0.04559561 & 0.07692308 \\ 
+Dollar\_Idx & 0.07692308 & 0.19156348 & 0.01000000 & 0.07692308 \\ 
+MSCI\_ACWI & 0.07692308 & 0.01000000 & 0.02924317 & 0.07692308 \\ 
+MSCI\_Jap & 0.07692308 & 0.01000000 & 0.03205321 & 0.07692308 \\ 
+MSCI\_RE & 0.07692308 & 0.01000000 & 0.02397183 & 0.07692308 \\ 
+MSCI\_USA & 0.07692308 & 0.01000000 & 0.02800484 & 0.07692308 \\ 
+Asia\_dollar\_Idx & 0.07692308 & 0.25000000 & 0.13439889 & 0.07692308 \\ 
+Bbg\_EUCorpCred\_Unhedged\_USD & 0.07692308 & 0.08821563 & 0.12449551 & 0.07692308 \\ 
+Bbg\_EuroBonds\_UnhedgedEUR & 0.07692308 & 0.01000000 & 0.10576337 & 0.07692308 \\ 
+Bbg\_GlBonds\_HedgedUSD & 0.07692308 & 0.25000000 & 0.16872457 & 0.07692308 \\ 
+Bbg\_GlCorpCred\_Hedged\_USD & 0.07692308 & 0.01000000 & 0.08956201 & 0.07692308 \\ 
+Bbg\_USBonds\_UnhedgedUSD & 0.07692308 & 0.13463832 & 0.14065509 & 0.07692308 \\ 
+Bbg\_USCorpCred\_Unhedged\_USD & 0.07692308 & 0.01000000 & 0.07027498 & 0.07692308 \\ 
+Commod\_Idx & 0.07692308 & 0.01000000 & 0.04471642 & 0.07692308 \\ 
+Dollar\_Idx & 0.07692308 & 0.19714605 & 0.01000000 & 0.07692308 \\ 
+MSCI\_ACWI & 0.07692308 & 0.01000000 & 0.02876989 & 0.07692308 \\ 
+MSCI\_Jap & 0.07692308 & 0.01000000 & 0.03145651 & 0.07692308 \\ 
+MSCI\_RE & 0.07692308 & 0.01000000 & 0.02369128 & 0.07692308 \\ 
+MSCI\_USA & 0.07692308 & 0.01000000 & 0.02749149 & 0.07692308 \\ 
+Asia\_dollar\_Idx & 0.07692308 & 0.25000000 & 0.13201015 & 0.07692308 \\ 
+Bbg\_EUCorpCred\_Unhedged\_USD & 0.07692308 & 0.08753933 & 0.12491774 & 0.07692308 \\ 
+Bbg\_EuroBonds\_UnhedgedEUR & 0.07692308 & 0.01000000 & 0.10659016 & 0.07692308 \\ 
+Bbg\_GlBonds\_HedgedUSD & 0.07692308 & 0.25000000 & 0.16943397 & 0.07692308 \\ 
+Bbg\_GlCorpCred\_Hedged\_USD & 0.07692308 & 0.01000000 & 0.08918193 & 0.07692308 \\ 
+Bbg\_USBonds\_UnhedgedUSD & 0.07692308 & 0.12626874 & 0.14064674 & 0.07692308 \\ 
+Bbg\_USCorpCred\_Unhedged\_USD & 0.07692308 & 0.01000000 & 0.06983652 & 0.07692308 \\ 
+Commod\_Idx & 0.07692308 & 0.01000000 & 0.04474167 & 0.07692308 \\ 
+Dollar\_Idx & 0.07692308 & 0.20619194 & 0.01000000 & 0.07692308 \\ 
+MSCI\_ACWI & 0.07692308 & 0.01000000 & 0.02878354 & 0.07692308 \\ 
+MSCI\_Jap & 0.07692308 & 0.01000000 & 0.03244771 & 0.07692308 \\ 
+MSCI\_RE & 0.07692308 & 0.01000000 & 0.02367795 & 0.07692308 \\ 
+MSCI\_USA & 0.07692308 & 0.01000000 & 0.02773192 & 0.07692308 \\ 
+Asia\_dollar\_Idx & 0.07692308 & 0.25000000 & 0.13097070 & 0.07692308 \\ 
+Bbg\_EUCorpCred\_Unhedged\_USD & 0.07692308 & 0.08209691 & 0.12532586 & 0.07692308 \\ 
+Bbg\_EuroBonds\_UnhedgedEUR & 0.07692308 & 0.01000000 & 0.10766632 & 0.07692308 \\ 
+Bbg\_GlBonds\_HedgedUSD & 0.07692308 & 0.25000000 & 0.17045726 & 0.07692308 \\ 
+Bbg\_GlCorpCred\_Hedged\_USD & 0.07692308 & 0.01000000 & 0.08876085 & 0.07692308 \\ 
+Bbg\_USBonds\_UnhedgedUSD & 0.07692308 & 0.12146664 & 0.14085485 & 0.07692308 \\ 
+Bbg\_USCorpCred\_Unhedged\_USD & 0.07692308 & 0.01000000 & 0.06934377 & 0.07692308 \\ 
+Commod\_Idx & 0.07692308 & 0.01000000 & 0.04447106 & 0.07692308 \\ 
+Dollar\_Idx & 0.07692308 & 0.21643645 & 0.01000000 & 0.07692308 \\ 
+MSCI\_ACWI & 0.07692308 & 0.01000000 & 0.02861860 & 0.07692308 \\ 
+MSCI\_Jap & 0.07692308 & 0.01000000 & 0.03256776 & 0.07692308 \\ 
+MSCI\_RE & 0.07692308 & 0.01000000 & 0.02348866 & 0.07692308 \\ 
+MSCI\_USA & 0.07692308 & 0.01000000 & 0.02747430 & 0.07692308 \\ 
+Asia\_dollar\_Idx & 0.07692308 & 0.25000000 & 0.13166546 & 0.07692308 \\ 
+Bbg\_EUCorpCred\_Unhedged\_USD & 0.07692308 & 0.08334296 & 0.12558352 & 0.07692308 \\ 
+Bbg\_EuroBonds\_UnhedgedEUR & 0.07692308 & 0.01000000 & 0.10733348 & 0.07692308 \\ 
+Bbg\_GlBonds\_HedgedUSD & 0.07692308 & 0.25000000 & 0.17139633 & 0.07692308 \\ 
+Bbg\_GlCorpCred\_Hedged\_USD & 0.07692308 & 0.01000000 & 0.08786160 & 0.07692308 \\ 
+Bbg\_USBonds\_UnhedgedUSD & 0.07692308 & 0.11365349 & 0.13890867 & 0.07692308 \\ 
+Bbg\_USCorpCred\_Unhedged\_USD & 0.07692308 & 0.01000000 & 0.06835231 & 0.07692308 \\ 
+Commod\_Idx & 0.07692308 & 0.01000000 & 0.04505669 & 0.07692308 \\ 
+Dollar\_Idx & 0.07692308 & 0.22250467 & 0.01000000 & 0.07692308 \\ 
+MSCI\_ACWI & 0.07692308 & 0.01000000 & 0.02864033 & 0.07692308 \\ 
+MSCI\_Jap & 0.07692308 & 0.01049888 & 0.03450363 & 0.07692308 \\ 
+MSCI\_RE & 0.07692308 & 0.01000000 & 0.02361864 & 0.07692308 \\ 
+MSCI\_USA & 0.07692308 & 0.01000000 & 0.02707934 & 0.07692308 \\ 
+Asia\_dollar\_Idx & 0.07692308 & 0.25000000 & 0.13534733 & 0.07692308 \\ 
+Bbg\_EUCorpCred\_Unhedged\_USD & 0.07692308 & 0.06831372 & 0.12451820 & 0.07692308 \\ 
+Bbg\_EuroBonds\_UnhedgedEUR & 0.07692308 & 0.01000000 & 0.10686766 & 0.07692308 \\ 
+Bbg\_GlBonds\_HedgedUSD & 0.07692308 & 0.25000000 & 0.16985506 & 0.07692308 \\ 
+Bbg\_GlCorpCred\_Hedged\_USD & 0.07692308 & 0.01000000 & 0.08723321 & 0.07692308 \\ 
+Bbg\_USBonds\_UnhedgedUSD & 0.07692308 & 0.12175459 & 0.13865649 & 0.07692308 \\ 
+Bbg\_USCorpCred\_Unhedged\_USD & 0.07692308 & 0.01000000 & 0.06782849 & 0.07692308 \\ 
+Commod\_Idx & 0.07692308 & 0.01000000 & 0.04559978 & 0.07692308 \\ 
+Dollar\_Idx & 0.07692308 & 0.22830594 & 0.01000000 & 0.07692308 \\ 
+MSCI\_ACWI & 0.07692308 & 0.01000000 & 0.02852439 & 0.07692308 \\ 
+MSCI\_Jap & 0.07692308 & 0.01162575 & 0.03557614 & 0.07692308 \\ 
+MSCI\_RE & 0.07692308 & 0.01000000 & 0.02338751 & 0.07692308 \\ 
+MSCI\_USA & 0.07692308 & 0.01000000 & 0.02660574 & 0.07692308 \\ 
+Asia\_dollar\_Idx & 0.07692308 & 0.25000000 & 0.13661905 & 0.07692308 \\ 
+Bbg\_EUCorpCred\_Unhedged\_USD & 0.07692308 & 0.07103612 & 0.12405161 & 0.07692308 \\ 
+Bbg\_EuroBonds\_UnhedgedEUR & 0.07692308 & 0.01000000 & 0.10730041 & 0.07692308 \\ 
+Bbg\_GlBonds\_HedgedUSD & 0.07692308 & 0.25000000 & 0.17176543 & 0.07692308 \\ 
+Bbg\_GlCorpCred\_Hedged\_USD & 0.07692308 & 0.01000000 & 0.08606201 & 0.07692308 \\ 
+Bbg\_USBonds\_UnhedgedUSD & 0.07692308 & 0.12054030 & 0.13898031 & 0.07692308 \\ 
+Bbg\_USCorpCred\_Unhedged\_USD & 0.07692308 & 0.01000000 & 0.06670365 & 0.07692308 \\ 
+Commod\_Idx & 0.07692308 & 0.01000000 & 0.04534212 & 0.07692308 \\ 
+Dollar\_Idx & 0.07692308 & 0.22622352 & 0.01000000 & 0.07692308 \\ 
+MSCI\_ACWI & 0.07692308 & 0.01000000 & 0.02815724 & 0.07692308 \\ 
+MSCI\_Jap & 0.07692308 & 0.01220005 & 0.03574449 & 0.07692308 \\ 
+MSCI\_RE & 0.07692308 & 0.01000000 & 0.02314076 & 0.07692308 \\ 
+MSCI\_USA & 0.07692308 & 0.01000000 & 0.02613291 & 0.07692308 \\ 
+Asia\_dollar\_Idx & 0.07692308 & 0.25000000 & 0.13896783 & 0.07692308 \\ 
+Bbg\_EUCorpCred\_Unhedged\_USD & 0.07692308 & 0.07270979 & 0.12305241 & 0.07692308 \\ 
+Bbg\_EuroBonds\_UnhedgedEUR & 0.07692308 & 0.01000000 & 0.10824639 & 0.07692308 \\ 
+Bbg\_GlBonds\_HedgedUSD & 0.07692308 & 0.25000000 & 0.17386859 & 0.07692308 \\ 
+Bbg\_GlCorpCred\_Hedged\_USD & 0.07692308 & 0.01000000 & 0.08492055 & 0.07692308 \\ 
+Bbg\_USBonds\_UnhedgedUSD & 0.07692308 & 0.12119652 & 0.14018244 & 0.07692308 \\ 
+Bbg\_USCorpCred\_Unhedged\_USD & 0.07692308 & 0.01000000 & 0.06563979 & 0.07692308 \\ 
+Commod\_Idx & 0.07692308 & 0.01000000 & 0.04398008 & 0.07692308 \\ 
+Dollar\_Idx & 0.07692308 & 0.22369915 & 0.01000000 & 0.07692308 \\ 
+MSCI\_ACWI & 0.07692308 & 0.01000000 & 0.02738071 & 0.07692308 \\ 
+MSCI\_Jap & 0.07692308 & 0.01239454 & 0.03562288 & 0.07692308 \\ 
+MSCI\_RE & 0.07692308 & 0.01000000 & 0.02296761 & 0.07692308 \\ 
+MSCI\_USA & 0.07692308 & 0.01000000 & 0.02517072 & 0.07692308 \\ 
+Asia\_dollar\_Idx & 0.07692308 & 0.25000000 & 0.14312429 & 0.07692308 \\ 
+Bbg\_EUCorpCred\_Unhedged\_USD & 0.07692308 & 0.07657947 & 0.12159156 & 0.07692308 \\ 
+Bbg\_EuroBonds\_UnhedgedEUR & 0.07692308 & 0.01000000 & 0.10813783 & 0.07692308 \\ 
+Bbg\_GlBonds\_HedgedUSD & 0.07692308 & 0.25000000 & 0.17460930 & 0.07692308 \\ 
+Bbg\_GlCorpCred\_Hedged\_USD & 0.07692308 & 0.01000000 & 0.08395623 & 0.07692308 \\ 
+Bbg\_USBonds\_UnhedgedUSD & 0.07692308 & 0.12105264 & 0.14131224 & 0.07692308 \\ 
+Bbg\_USCorpCred\_Unhedged\_USD & 0.07692308 & 0.01000000 & 0.06482714 & 0.07692308 \\ 
+Commod\_Idx & 0.07692308 & 0.01000000 & 0.04375687 & 0.07692308 \\ 
+Dollar\_Idx & 0.07692308 & 0.22037304 & 0.01000000 & 0.07692308 \\ 
+MSCI\_ACWI & 0.07692308 & 0.01000000 & 0.02647834 & 0.07692308 \\ 
+MSCI\_Jap & 0.07692308 & 0.01199484 & 0.03540831 & 0.07692308 \\ 
+MSCI\_RE & 0.07692308 & 0.01000000 & 0.02256366 & 0.07692308 \\ 
+MSCI\_USA & 0.07692308 & 0.01000000 & 0.02423423 & 0.07692308 \\ 
+Asia\_dollar\_Idx & 0.07692308 & 0.25000000 & 0.14308506 & 0.07692308 \\ 
+Bbg\_EUCorpCred\_Unhedged\_USD & 0.07692308 & 0.07410844 & 0.12171386 & 0.07692308 \\ 
+Bbg\_EuroBonds\_UnhedgedEUR & 0.07692308 & 0.01000000 & 0.10814246 & 0.07692308 \\ 
+Bbg\_GlBonds\_HedgedUSD & 0.07692308 & 0.25000000 & 0.17528510 & 0.07692308 \\ 
+Bbg\_GlCorpCred\_Hedged\_USD & 0.07692308 & 0.01000000 & 0.08366472 & 0.07692308 \\ 
+Bbg\_USBonds\_UnhedgedUSD & 0.07692308 & 0.11950274 & 0.14232239 & 0.07692308 \\ 
+Bbg\_USCorpCred\_Unhedged\_USD & 0.07692308 & 0.01000000 & 0.06448803 & 0.07692308 \\ 
+Commod\_Idx & 0.07692308 & 0.01000000 & 0.04335089 & 0.07692308 \\ 
+Dollar\_Idx & 0.07692308 & 0.22383607 & 0.01000000 & 0.07692308 \\ 
+MSCI\_ACWI & 0.07692308 & 0.01000000 & 0.02613829 & 0.07692308 \\ 
+MSCI\_Jap & 0.07692308 & 0.01255275 & 0.03562481 & 0.07692308 \\ 
+MSCI\_RE & 0.07692308 & 0.01000000 & 0.02232417 & 0.07692308 \\ 
+MSCI\_USA & 0.07692308 & 0.01000000 & 0.02386022 & 0.07692308 \\ 
+Asia\_dollar\_Idx & 0.07692308 & 0.25000000 & 0.14305862 & 0.07692308 \\ 
+Bbg\_EUCorpCred\_Unhedged\_USD & 0.07692308 & 0.07451818 & 0.12140644 & 0.07692308 \\ 
+Bbg\_EuroBonds\_UnhedgedEUR & 0.07692308 & 0.01000000 & 0.10897413 & 0.07692308 \\ 
+Bbg\_GlBonds\_HedgedUSD & 0.07692308 & 0.25000000 & 0.17660184 & 0.07692308 \\ 
+Bbg\_GlCorpCred\_Hedged\_USD & 0.07692308 & 0.01000000 & 0.08305284 & 0.07692308 \\ 
+Bbg\_USBonds\_UnhedgedUSD & 0.07692308 & 0.11640442 & 0.14330329 & 0.07692308 \\ 
+Bbg\_USCorpCred\_Unhedged\_USD & 0.07692308 & 0.01000000 & 0.06390042 & 0.07692308 \\ 
+Commod\_Idx & 0.07692308 & 0.01000000 & 0.04301023 & 0.07692308 \\ 
+Dollar\_Idx & 0.07692308 & 0.22661000 & 0.01000000 & 0.07692308 \\ 
+MSCI\_ACWI & 0.07692308 & 0.01000000 & 0.02567065 & 0.07692308 \\ 
+MSCI\_Jap & 0.07692308 & 0.01246740 & 0.03559052 & 0.07692308 \\ 
+MSCI\_RE & 0.07692308 & 0.01000000 & 0.02204897 & 0.07692308 \\ 
+MSCI\_USA & 0.07692308 & 0.01000000 & 0.02338205 & 0.07692308 \\ 
+Asia\_dollar\_Idx & 0.07692308 & 0.25000000 & 0.14324006 & 0.07692308 \\ 
+Bbg\_EUCorpCred\_Unhedged\_USD & 0.07692308 & 0.07281444 & 0.12131779 & 0.07692308 \\ 
+Bbg\_EuroBonds\_UnhedgedEUR & 0.07692308 & 0.01000000 & 0.10907297 & 0.07692308 \\ 
+Bbg\_GlBonds\_HedgedUSD & 0.07692308 & 0.25000000 & 0.17764824 & 0.07692308 \\ 
+Bbg\_GlCorpCred\_Hedged\_USD & 0.07692308 & 0.01000000 & 0.08254786 & 0.07692308 \\ 
+Bbg\_USBonds\_UnhedgedUSD & 0.07692308 & 0.11548330 & 0.14405441 & 0.07692308 \\ 
+Bbg\_USCorpCred\_Unhedged\_USD & 0.07692308 & 0.01000000 & 0.06341905 & 0.07692308 \\ 
+Commod\_Idx & 0.07692308 & 0.01000000 & 0.04317307 & 0.07692308 \\ 
+Dollar\_Idx & 0.07692308 & 0.22883768 & 0.01000000 & 0.07692308 \\ 
+MSCI\_ACWI & 0.07692308 & 0.01000000 & 0.02523850 & 0.07692308 \\ 
+MSCI\_Jap & 0.07692308 & 0.01286458 & 0.03559292 & 0.07692308 \\ 
+MSCI\_RE & 0.07692308 & 0.01000000 & 0.02176189 & 0.07692308 \\ 
+MSCI\_USA & 0.07692308 & 0.01000000 & 0.02293324 & 0.07692308 \\ 
+Asia\_dollar\_Idx & 0.07692308 & 0.25000000 & 0.14578081 & 0.07692308 \\ 
+Bbg\_EUCorpCred\_Unhedged\_USD & 0.07692308 & 0.06337902 & 0.12004182 & 0.07692308 \\ 
+Bbg\_EuroBonds\_UnhedgedEUR & 0.07692308 & 0.01000000 & 0.10797622 & 0.07692308 \\ 
+Bbg\_GlBonds\_HedgedUSD & 0.07692308 & 0.25000000 & 0.17743117 & 0.07692308 \\ 
+Bbg\_GlCorpCred\_Hedged\_USD & 0.07692308 & 0.01000000 & 0.08172058 & 0.07692308 \\ 
+Bbg\_USBonds\_UnhedgedUSD & 0.07692308 & 0.11746228 & 0.14533145 & 0.07692308 \\ 
+Bbg\_USCorpCred\_Unhedged\_USD & 0.07692308 & 0.01000000 & 0.06279507 & 0.07692308 \\ 
+Commod\_Idx & 0.07692308 & 0.01000000 & 0.04261185 & 0.07692308 \\ 
+Dollar\_Idx & 0.07692308 & 0.23562991 & 0.01000000 & 0.07692308 \\ 
+MSCI\_ACWI & 0.07692308 & 0.01000000 & 0.02536117 & 0.07692308 \\ 
+MSCI\_Jap & 0.07692308 & 0.01352879 & 0.03604160 & 0.07692308 \\ 
+MSCI\_RE & 0.07692308 & 0.01000000 & 0.02172785 & 0.07692308 \\ 
+MSCI\_USA & 0.07692308 & 0.01000000 & 0.02318040 & 0.07692308 \\ 
+Asia\_dollar\_Idx & 0.07692308 & 0.25000000 & 0.14741844 & 0.07692308 \\ 
+Bbg\_EUCorpCred\_Unhedged\_USD & 0.07692308 & 0.05650453 & 0.11958193 & 0.07692308 \\ 
+Bbg\_EuroBonds\_UnhedgedEUR & 0.07692308 & 0.01000000 & 0.10784067 & 0.07692308 \\ 
+Bbg\_GlBonds\_HedgedUSD & 0.07692308 & 0.25000000 & 0.17787354 & 0.07692308 \\ 
+Bbg\_GlCorpCred\_Hedged\_USD & 0.07692308 & 0.01000000 & 0.08125752 & 0.07692308 \\ 
+Bbg\_USBonds\_UnhedgedUSD & 0.07692308 & 0.11905404 & 0.14596058 & 0.07692308 \\ 
+Bbg\_USCorpCred\_Unhedged\_USD & 0.07692308 & 0.01000000 & 0.06242530 & 0.07692308 \\ 
+Commod\_Idx & 0.07692308 & 0.01000000 & 0.04231556 & 0.07692308 \\ 
+Dollar\_Idx & 0.07692308 & 0.24030888 & 0.01000000 & 0.07692308 \\ 
+MSCI\_ACWI & 0.07692308 & 0.01000000 & 0.02502479 & 0.07692308 \\ 
+MSCI\_Jap & 0.07692308 & 0.01413254 & 0.03595138 & 0.07692308 \\ 
+MSCI\_RE & 0.07692308 & 0.01000000 & 0.02151920 & 0.07692308 \\ 
+MSCI\_USA & 0.07692308 & 0.01000000 & 0.02283108 & 0.07692308 \\ 
+Asia\_dollar\_Idx & 0.07692308 & 0.25000000 & 0.15350012 & 0.07692308 \\ 
+Bbg\_EUCorpCred\_Unhedged\_USD & 0.07692308 & 0.05330029 & 0.11821963 & 0.07692308 \\ 
+Bbg\_EuroBonds\_UnhedgedEUR & 0.07692308 & 0.01000000 & 0.10686086 & 0.07692308 \\ 
+Bbg\_GlBonds\_HedgedUSD & 0.07692308 & 0.25000000 & 0.17753000 & 0.07692308 \\ 
+Bbg\_GlCorpCred\_Hedged\_USD & 0.07692308 & 0.01000000 & 0.08009634 & 0.07692308 \\ 
+Bbg\_USBonds\_UnhedgedUSD & 0.07692308 & 0.11897331 & 0.14554595 & 0.07692308 \\ 
+Bbg\_USCorpCred\_Unhedged\_USD & 0.07692308 & 0.01000000 & 0.06150359 & 0.07692308 \\ 
+Commod\_Idx & 0.07692308 & 0.01000000 & 0.04272619 & 0.07692308 \\ 
+Dollar\_Idx & 0.07692308 & 0.24356990 & 0.01000000 & 0.07692308 \\ 
+MSCI\_ACWI & 0.07692308 & 0.01000000 & 0.02464456 & 0.07692308 \\ 
+MSCI\_Jap & 0.07692308 & 0.01415650 & 0.03581395 & 0.07692308 \\ 
+MSCI\_RE & 0.07692308 & 0.01000000 & 0.02116703 & 0.07692308 \\ 
+MSCI\_USA & 0.07692308 & 0.01000000 & 0.02239178 & 0.07692308 \\ 
+\bottomrule
+\end{longtable}
+
+\hfill
+
+\newpage
+
+\bibliography{Tex/ref}
+
+
+
+
+
+\end{document}

@@ -146,7 +146,7 @@ xts_tbl()  %>% mutate(date = as.Date(date))
 #fill in values of indexes -Better solution - as it preserves the distributional elements particular to the stock.
 Indexes_long <- Indexes %>% gather("Index", "Returns", -date)
 Index_ZAR <- merge(Indexes, ZAR, by="date", all=T)
-source("code/Impute_NA_Returns.R") 
+source("code/Impute_NA_Returns.R") #function to make matrix complete
 
 
 complete_data <- impute_missing_returns(Index_ZAR, impute_returns_method = "Drawn_Distribution_Own")
