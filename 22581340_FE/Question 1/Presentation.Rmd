@@ -1,6 +1,6 @@
 ---
-title: "Performance of Fund"
-subtitle: "TBC"
+title: "Performance of AI Fund"
+subtitle: "Analyzing the AI Fund Against Actively Managed Comparative Funds"
 author: "Gabriella Neilon"
 institute: "Stellenbosch University"
 date: "`r format(Sys.Date(), '%B %d, %Y')`"
@@ -12,7 +12,7 @@ output:
     fonttheme: "serif"
     slide_level: 2
     fig_width: 5
-    fig_height: 3
+    fig_height: 6
 header-includes:
    - \usepackage{palatino}
    - \useoutertheme{infolines}
@@ -25,20 +25,16 @@ header-includes:
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-## Introduction
-
-///
-
 ## Annualised Rolling Returns
 
 ![](Figures/g_finplot.png)
 
-We can see that the AI fund travks the benchmark much better than the comparitive actively managed industry funds
+The AI fund closely mirrors the benchmark compared to its industry peers.
 
-## Rolling Betas (benchmark)
+## Rolling Betas
 
-![](Figures/rolling_bm.png)
+![](Figures/rolling_beta.png)
 
-## Rolling Betas (industry)
+## Key Takeaway
 
-![](Figures/rolling_industry.png)
+The AI fund exhibits a close alignment with the benchmark in contrast to its industry counterparts. Although the rolling Beta of the AI Fund indicates higher volatility compared to the benchmark, which is typical for technology-oriented funds, the fund outperforms the industry. If the industry is actively managed and demonstrates lower volatility than the benchmark, this suggests that the AI Fund's performance remains superior despite its higher volatility. indicating the non-actively managed fund's ability to sustain its competitive edge.

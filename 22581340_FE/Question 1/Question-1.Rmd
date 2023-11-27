@@ -99,7 +99,7 @@ output:
 Question 1
 # Setup
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, fig.width = 7, fig.height = 5, fig.pos="H", fig.pos = 'H')
 
 library(tidyverse)
 library(zoo)
@@ -160,7 +160,7 @@ tidydat <- finaldat %>% gather("Funds", "Returns", -date)
 
 ## Plots
 
-```{r, fig.height=4,fig.width=6}
+```{r}
 plottidydat <- 
 tidydat %>% group_by(Funds) %>% 
 mutate(RollRets = RcppRoll::roll_prod(1 + Returns, 36, fill = NA, 
@@ -175,7 +175,7 @@ geom_line(aes(date, RollRets, color = Funds), alpha = 0.7,
     size = 1.25) + 
 labs(title = "Rolling 3 Year Annualized Returns of Indices", 
     subtitle = "", x = "", y = "Rolling 3 year Returns (Ann.)", 
-    caption = "Note:\nIndustry Index is a basic calculation for better comparisons") + theme_fmx(title.size = ggpts(30), 
+    caption = "Note:\nIndustry Index is a basic calculation for grouping together the comparative industries for better comparisons") + theme_fmx(title.size = ggpts(30), 
     subtitle.size = ggpts(5), caption.size = ggpts(25), CustomCaption = T) + 
     
 fmx_cols()
@@ -190,7 +190,7 @@ The AI fund closely mirrors the benchmark compared to its industry peers.
 
 Rolling Betas (comparing volatility)
 
-```{r, fig.height=3,fig.width=6}
+```{r}
 # Rolling Betas:
 
 # 
